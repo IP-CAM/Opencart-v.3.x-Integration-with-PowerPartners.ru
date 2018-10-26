@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+	<name>Powerpartners 3.0-3.0.2</name>
+	<version>0.92</version>
+	<author>Powerpartners</author>
+	<link>http://powerpartners.ru/</link>
+	<code>power001</code>
+	<file path="catalog/model/checkout/order.php">
+		<operation>
+			<search><![CDATA[$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$order_status_id . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");]]></search>
+			<add position="after"><![CDATA[
+			/* POWERPARTNERS CHANGES */
+			/* check order and send order to service */
+		 
+			//$this->load->model('extension/module/power');
+			//$this->model_extension_module_power->sendOrder($order_info);
+ 
+			/* END POWERPARTNERS CHANGES */
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/checkout/payment_method.php">
+		<operation>
+			<search><![CDATA[array_multisort($sort_order, SORT_ASC, $method_data);]]></search>
+			<add position="after"><![CDATA[
+			
+			/* POWERPARTNERS CHANGES */
+			$this->load->model('extension/module/power');
+			$method_data = $this->model_extension_module_power->getPayment( $method_data);
+			/* END POWERPARTNERS CHANGES */
+			
+			]]></add>
+		</operation>
+	</file>
+	
+	<file path="catalog/controller/checkout/shipping_method.php">
+		<operation>
+			<search><![CDATA[array_multisort($sort_order, SORT_ASC, $method_data);]]></search>
+			<add position="after"><![CDATA[
+			
+			/* POWERPARTNERS CHANGES */
+			$this->load->model('extension/module/power');
+			$method_data = $this->model_extension_module_power->getShipping( $method_data);
+			/* END POWERPARTNERS CHANGES */
+			
+			
+			]]></add>
+		</operation>
+	</file>
+	<file path="catalog/controller/product/product.php">
+		<operation>
+			<search><![CDATA[if ($product_info) {]]></search>
+			<add position="after"><![CDATA[
+			
+			/* POWERPARTNERS CHANGES */
+			 
+			$this->load->model('extension/module/power');
+			$product_info['description'] =  $this->model_extension_module_power->getProductDescription($product_id);
+			 
+			/* END POWERPARTNERS CHANGES */
+			
+			
+			]]></add>
+		</operation>
+	</file>
+ 
+	
+	
+
+</modification>

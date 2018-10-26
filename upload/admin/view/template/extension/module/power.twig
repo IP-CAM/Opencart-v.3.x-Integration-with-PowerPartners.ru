@@ -1,0 +1,227 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-latest" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+		{% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+	 {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+     {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+		<div class="alert alert-info">
+			<h2>Настройте выполнение задач cron по расписанию на сервере:</h2>
+			<p>
+				<i class="fa fa-info-circle"></i> Обновление товаров&emsp;<br><b>0 0 * * * php {{ cron2 }}</b>
+			</p>
+			<p>
+				<i class="fa fa-info-circle"></i> Обновление заказов&emsp;<br><b>0 * * * * php {{ cron }}</b>
+			</p>
+		</div>
+	  
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-latest" class="form-horizontal">
+		<ul class="nav nav-tabs">
+			<li class="active">
+				<a href="#tab_sale" data-toggle="tab">Настройки</a>
+			</li>
+			<li>
+				<a href="#tab_about" data-toggle="tab">О модуле</a>
+			</li>
+			 
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="tab_sale">
+			
+				
+				
+				<br>
+				<h3 class="panel-title">Партнерские данные</h3>
+			 
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-login">Токен</label>
+					<div class="col-sm-10">
+					  <input type="text" name="module_power_token" value="{{ module_power_token }}" placeholder="Ваш токен" id="input-token" class="form-control" />
+					  {% if error_token %}
+					  <div class="text-danger">{{ error_token}}</div>
+					  {% endif %}
+					</div>
+				</div>
+					 
+				<br>
+				<br>
+				<h3 class="panel-title">Статусы заказа</h3> 
+				 
+				{% for power_status_key,power_status_value in module_power_status_power %} 
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-login">При статусе заказе <br>'{{ power_status_value }}'<br> установить статус заказа в магазине:</label>
+					<div class="col-sm-10">
+						<select name="module_power_status_oc[{{ power_status_key }}]" id="input-module_power_order_status_id" class="form-control">
+ 
+									{% for key2,order_status in order_statuses %} 
+										 <option  
+										{% if module_power_status_oc[power_status_key ] is defined %}
+											{% if module_power_status_oc[power_status_key] == order_status.order_status_id %}
+												 selected="selected" 
+											{% endif %}
+										{% endif %}
+										value="{{ order_status.order_status_id }}">{{ order_status.name }}</option> 
+									{% endfor %}
+						  </select>
+				
+					</div>
+				</div>
+				{% endfor %}
+ 
+				 
+				<br>
+				<br>
+				<h3 class="panel-title">Товарные статусы</h3>
+			 
+				 <div class="form-group">
+					<label class="col-sm-2 control-label" for="input-login">Статус товара в наличии</label>
+					<div class="col-sm-10">
+						<select name="module_power_in_stock" id="input-module_power_in_stock" class="form-control">
+						 
+							 
+								{% for key2,status in stock_statuses %} 
+									 <option  
+									{% if module_power_in_stock  is defined %}
+										{% if module_power_in_stock  == status.stock_status_id %}
+											 selected="selected" 
+										{% endif %}
+									{% endif %}
+									value="{{ status.stock_status_id }}">{{ status.name }}</option> 
+								{% endfor %}
+						  </select>
+				
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-login">Статус товара не в наличии</label>
+					<div class="col-sm-10">
+						<select name="module_power_out_of_stock" id="input-module_power_out_of_stock" class="form-control">
+						 
+							 
+								{% for key2,status in stock_statuses %} 
+									 <option  
+									{% if module_power_out_of_stock  is defined %}
+										{% if module_power_out_of_stock  == status.stock_status_id %}
+											 selected="selected" 
+										{% endif %}
+									{% endif %}
+									value="{{ status.stock_status_id }}">{{ status.name }}</option> 
+								{% endfor %}
+						  </select>
+				
+					</div>
+				</div>
+				 
+			 
+				<br>
+				<br>
+				<h3 class="panel-title">Каталог</h3>
+			 
+				
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-inn">Последняя загрузка</label>
+					<div class="col-sm-10">
+					  <input type="text"   disabled="disabled" value="{{ module_power_last_feed }}" placeholder="данные не загружались"  class="form-control" />
+					  <input type="hidden" name="module_power_last_feed"   value="{{ module_power_last_feed }}"  />
+					 
+					</div>
+				</div>
+					
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-inn">Обновить каталог</label>
+					<div class="col-sm-10">
+					  <a id="run_manual" class="btn btn-info" href="{{ update_feed_url }}" target="blank">Запустить вручную</a>
+				 
+					 
+					</div>
+				</div>
+				 
+				<br>
+				 
+				<br>
+					<h3 class="panel-title">Модуль</h3>
+				  
+				  <div class="form-group">
+					<label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+					<div class="col-sm-10">
+					  <select name="module_power_status" id="input-status" class="form-control">
+						 {% if module_power_status  == 1 %} 
+						<option value="1" selected="selected">{{ text_enabled }}</option>
+						<option value="0">{{ text_disabled }}</option>
+						{% else %}  
+						<option value="1">{{ text_enabled }}</option>
+						<option value="0" selected="selected">{{ text_disabled }}</option>
+						{% endif %}
+					  </select>
+					</div>
+				  </div>
+				
+			
+			</div><!-- tab-pane -->
+			
+			<div class="tab-pane" id="tab_about">
+				<div class="col-sm-offset-2 col-sm-8">
+					<h3>Партенерская программа  PowerPartners  для Opencart 3</h3>
+					
+					
+					<div class="row" style="margin-top:50px;">
+						<div class="col-sm-3">
+						 
+						<a href="http://powerpartners.ru"><img src="view/image/power/powerpartners_logo.png"  class="img-responsive"  style="margin:20px;max-width:150px;"></a>
+						</div>
+						<div class="col-sm-9">
+						<h4>Разработан по заказу компании PowerPartners.ru</h4>
+						<p>Партенерская программа для интернет магазинов</p>
+						<p><a href="http://powerpartners.ru">powerpartners.ru</a></p>
+						<p><a href="mailto:admin@powerpartners.ru">admin@powerpartners.ru</a></p>
+						</div>
+					</div>
+					
+					<div class="row"  style="margin-top:50px;">
+						<div class="col-sm-3">
+						<a href="mad-studio.ru"><img src="view/image/power/mad.png"  class="img-responsive"  style="margin:20px;max-width:150px;"></a>
+						</div>
+						<div class="col-sm-9">
+						<h4>Разработан в компании MAD-Studio</h4>
+						<p>Разработка и поддержка Opencart</p>
+						<p><a href="https://mad-studio.ru">mad-studio.ru</a></p>
+						<p><a href="mailto:mail@mad-studio.ru">mail@mad-studio.ru</a></p>
+						</div>
+					</div>
+					
+					 
+					
+				</div>
+			</div><!-- tab-pane -->
+			
+	 
+		</div><!-- tab-content -->
+		  
+		  
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+{{ footer }}
