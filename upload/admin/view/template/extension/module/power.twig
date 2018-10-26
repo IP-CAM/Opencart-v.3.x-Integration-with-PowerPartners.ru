@@ -27,11 +27,9 @@
 		<div class="alert alert-info">
 			<h2>Настройте выполнение задач cron по расписанию на сервере:</h2>
 			<p>
-				<i class="fa fa-info-circle"></i> Обновление товаров&emsp;<br><b>0 0 * * * php {{ cron2 }}</b>
+				<i class="fa fa-info-circle"></i> Обновление информации&emsp;<br><b>0 0 * * * php {{ cron3 }}</b>
 			</p>
-			<p>
-				<i class="fa fa-info-circle"></i> Обновление заказов&emsp;<br><b>0 * * * * php {{ cron }}</b>
-			</p>
+			 
 		</div>
 	  
         <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-latest" class="form-horizontal">
@@ -132,7 +130,48 @@
 					</div>
 				</div>
 				 
+			 <br>
+				<br>
+				<h3 class="panel-title">Единицы измерения</h3>
 			 
+				 <div class="form-group">
+					<label class="col-sm-2 control-label" for="input-login">Миллиметр</label>
+					<div class="col-sm-10">
+						<select name="module_power_length_class_id" id="input-module_power_length_class_id" class="form-control">
+						 
+							 
+								{% for key2,class in length_classes %} 
+									 <option  
+									{% if module_power_length_class_id  is defined %}
+										{% if module_power_length_class_id  == class.length_class_id %}
+											 selected="selected" 
+										{% endif %}
+									{% endif %}
+									value="{{ class.length_class_id }}">{{ class.title }}</option> 
+								{% endfor %}
+						  </select>
+				
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-login">Килограмм</label>
+					<div class="col-sm-10">
+						<select name="module_power_weight_class_id" id="input-module_power_weight_class_id" class="form-control">
+						 
+							 
+								{% for key2,class in weight_classes %} 
+									 <option  
+									{% if module_power_weight_class_id  is defined %}
+										{% if module_power_weight_class_id  == class.weight_class_id %}
+											 selected="selected" 
+										{% endif %}
+									{% endif %}
+									value="{{ class.weight_class_id }}">{{ class.title }}</option> 
+								{% endfor %}
+						  </select>
+				
+					</div>
+				</div>
 				<br>
 				<br>
 				<h3 class="panel-title">Каталог</h3>
@@ -223,5 +262,38 @@
     </div>
   </div>
 </div>
- 
+<script>
+	$('#btn_check').click(function(){
+		
+		var url = $(this).data('url');
+
+		$.post(url, { login: $('input[name=module_power_login]').val(), pass: $('input[name=module_power_password]').val(), url: $('input[name=module_power_url]').val() },
+		
+		
+		    function( data ) {	
+				$('#msg_check').removeClass('alert-danger');
+				$('#msg_check').removeClass('alert-success');
+			 
+								 
+				
+					if(data.code>=2){
+						$('#msg_check').addClass('alert-danger');
+						$('#msg_check').text('Ошибка '+ data.code + ' ' + data.text );
+					}else{
+						$('#msg_check').addClass('alert-success');
+						$('#msg_check').text('Проверка успешна ' );
+					}
+					console.log(data);
+			 
+			
+			
+			
+			
+			}, 'json');
+	
+	
+	});
+
+
+</script>
 {{ footer }}

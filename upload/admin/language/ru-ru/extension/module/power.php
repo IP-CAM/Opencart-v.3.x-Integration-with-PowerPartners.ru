@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']    = '<b style="  font-weight: bold; color: #d9262e;">PowerPartners</b>';
+$_['heading_title']    = 'PowerPartners';
 
 // Text
 $_['text_module']      = 'Модули';

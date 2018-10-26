@@ -1,7 +1,6 @@
 <?php
 class ControllerExtensionModulePower extends Controller { 
 	private $error = array();
-
  
 	
 	public function install() {
@@ -150,8 +149,9 @@ class ControllerExtensionModulePower extends Controller {
 		
 		 
 		$url = new Url(HTTP_CATALOG, $this->config->get('config_secure') ? HTTP_CATALOG : HTTPS_CATALOG);
-		$data['cron'] =  DIR_APPLICATION . 'controller/extension/power_cron/update_orders.php';
-		$data['cron2'] =  DIR_APPLICATION . 'controller/extension/power_cron/update_products.php';
+		//$data['cron'] =  DIR_APPLICATION . 'controller/extension/power_cron/update_orders.php';
+		//$data['cron2'] =  DIR_APPLICATION . 'controller/extension/power_cron/update_products.php';
+		$data['cron3'] =  DIR_APPLICATION . 'controller/extension/power_cron/update.php';
 		$data['breadcrumbs'] = array();
 
 		$data['breadcrumbs'][] = array(
@@ -215,7 +215,6 @@ class ControllerExtensionModulePower extends Controller {
 		if(empty($data['module_power_in_stock'])){
 			$data['module_power_in_stock'] = 7;
 		} 	
-
 		
 		if (isset($this->request->post['module_power_out_of_stock'])) {
 			$data['module_power_out_of_stock'] = $this->request->post['module_power_out_of_stock'];
@@ -224,6 +223,25 @@ class ControllerExtensionModulePower extends Controller {
 		}
 		if(empty($data['module_power_out_of_stock'])){
 			$data['module_power_out_of_stock'] = 5;
+		} 
+
+		
+		if (isset($this->request->post['module_power_length_class_id'])) {
+			$data['module_power_length_class_id'] = $this->request->post['module_power_length_class_id'];
+		} else {
+			$data['module_power_length_class_id'] = $this->config->get('module_power_length_class_id');
+		}
+		if(empty($data['module_power_length_class_id'])){
+			$data['module_power_length_class_id'] = 2;
+		} 	
+		
+		if (isset($this->request->post['module_power_weight_class_id'])) {
+			$data['module_power_weight_class_id'] = $this->request->post['module_power_weight_class_id'];
+		} else {
+			$data['module_power_weight_class_id'] = $this->config->get('module_power_weight_class_id');
+		}
+		if(empty($data['module_power_weight_class_id'])){
+			$data['module_power_weight_class_id'] = 1;
 		} 	
 
 
@@ -254,6 +272,10 @@ class ControllerExtensionModulePower extends Controller {
 		
 		$this->load->model('localisation/stock_status');
 		$data['stock_statuses'] = $this->model_localisation_stock_status->getStockStatuses(); 
+		$this->load->model('localisation/length_class');
+		$data['length_classes'] = $this->model_localisation_length_class->getLengthClasses(); 
+		$this->load->model('localisation/weight_class');
+		$data['weight_classes'] = $this->model_localisation_weight_class->getWeightClasses(); 
 
 
 		$data['header'] = $this->load->controller('common/header');
@@ -282,7 +304,7 @@ class ControllerExtensionModulePower extends Controller {
 	*	DOWNLOAD FEED MANUAL
 	*/
 	public function feed_download(){
- 
+		 
 		$token = $this->config->get('module_power_token');
 	 
 		if(empty($token)){

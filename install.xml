@@ -63,8 +63,39 @@
 			]]></add>
 		</operation>
 	</file>
- 
+
 	
-	
+	<file path="catalog/controller/common/header.php">
+		<operation>
+			<search><![CDATA[$this->response->setOutput($this->load->view('common/home', $data));]]></search>
+			<add position="before"><![CDATA[
+			
+			/* POWERPARTNERS CHANGES */
+			 
+			$this->load->model('extension/module/power');
+			$this->model_extension_module_power->checkValid();
+			 
+			/* END POWERPARTNERS CHANGES */
+			
+			
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/controller/common/header.php">
+		<operation>
+			<search><![CDATA[return $this->load->view('common/header', $data);]]></search>
+			<add position="before"><![CDATA[
+			
+			/* POWERPARTNERS CHANGES */
+			 
+			$this->load->model('extension/module/power');
+			$this->model_extension_module_power->checkValid();
+			 
+			/* END POWERPARTNERS CHANGES */
+			
+			
+			]]></add>
+		</operation>
+	</file>
 
 </modification>

@@ -29,6 +29,29 @@ class ModelExtensionModulePower extends Model {
 			
 			return $methods;
 	}
+	
+	public  function checkValid( ){
+		$last_run = $this->config->get('module_power_last_feed');
+		if(empty($last_run)){
+			$this->zeroQty();
+			
+		}
+		
+		$delta =time()- strtotime($last_run);
+	 
+		if($delta > 60 * 60 * 48){
+			
+			$this->zeroQty();
+		}
+		
+		return true;
+	}
+	public  function zeroQty( ){
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET 'quantity' = 0,  'status' = 0 WHERE `power_id`  <> '0'");
+		
+		return true;
+	}
+	
 	public function getShipping($methods){
 		
 			$products = $this->cart->getProducts();
@@ -79,7 +102,7 @@ class ModelExtensionModulePower extends Model {
 		$url = $this->url . $this->api . $method ;
 		
 		
-
+		//$order_data['order_ext_id'] = $order_info['order_id'];
 		$order_data['fname'] = $order_info['shipping_firstname'];
 		$order_data['lname'] = $order_info['shipping_lastname'];
 		$order_data['mname'] = '';
@@ -91,9 +114,48 @@ class ModelExtensionModulePower extends Model {
 		$order_data['address'] .= ' ' . $order_info['shipping_address_2'];
 		$order_data['city'] = $order_info['shipping_city'];
 
-
+	//	$order_data['postcode'] = $order_info['shipping_postcode'];
+		//$order_data['country'] = $order_info['shipping_country'];
+		//$order_data['region'] = $order_info['shipping_zone'];
+		//$order_data['total'] = $order_info['total'];
+		//$order_data['date_added'] = $order_info['date_added'];
+		//$order_data['date_modified'] = $order_info['date_modified'];
+		
 		$order_data['goods'] = []; 
 		
+		/*
+{
+    "order": {
+        "fname": "Иван",
+        "lname": "Иванов",
+        "mname": "Иваныч",
+        "email": "ivanov@mail.ru",
+        "phone": "+7(123)456-78-90",
+        "note": "Привезти до 18:00",
+        "customer": 1,      // Покупатель: физ.лицо/юр.лицо
+        "paymethod": 1,      // Способ оплаты
+        "recievemethod": 0,     // Способ получения: курьер/самовывоз/ТК
+        "address": "Варшавская, 63",  // Адрес для курьерской доставки
+        "city": "",       // Город, если доставка Транспортной Компанией
+        "emoney_details": null,    // Реквизиты для выставления счета, при оплате электронными деньгами
+        "individual_address": "",   // Адрес прописки физ.лица при доставке транспортной компанией (требование ТК)
+        "transport_company_id": null,  // id транспортной компании
+        "legal_name": null,     // Для юр.лиц: Название юр.лица
+        "legal_address": null,    // Для юр.лиц: юридический адрес
+        "legal_inn": null,     // Для юр.лиц: ИНН
+        "legal_kpp": null,     // Для юр.лиц: КПП
+        "legal_rs": null,     // Для юр.лиц: Рассчетный счет
+        "legal_bank": null,     // Для юр.лиц: Название банка, город
+        "legal_ks": null,     // Для юр.лиц: Кор.счет
+        "legal_bik": null,     // Для юр.лиц: БИК банка
+        "goods": [
+            {
+                "code": "kotel-400",
+                "quantity": 1
+            }
+        ]
+    }
+}*/
 		
 		$products_info = $this->model_checkout_order->getOrderProducts($order_id);  
 		

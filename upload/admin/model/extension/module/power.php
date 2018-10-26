@@ -105,6 +105,27 @@ class ModelExtensionModulePower extends Model {
 	}
 
 	
+	public  function checkValid( ){
+		$last_run = $this->config->get('module_power_last_feed');
+		if(empty($last_run)){
+			$this->zeroQty();
+			
+		}
+		
+		$delta =time()- strtotime($last_run);
+	 
+		if($delta > 60 * 60 * 48){
+			
+			$this->zeroQty();
+		}
+		
+		return true;
+	}
+	public  function zeroQty( ){
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET 'quantity' = 0,  'status' = 0 WHERE `power_id`  <> '0'");
+		
+		return true;
+	}
 	public function request($token, $method, $data = []) {
 		$url = $this->url . $this->api . $method ;
 		
@@ -131,6 +152,8 @@ class ModelExtensionModulePower extends Model {
 		$in_stock = (int)$this->config->get('module_power_in_stock') ;
 		//not in stock status
 		$out_of_stock = (int)$this->config->get('module_power_out_of_stock') ;
+		$weight_class_id = (int)$this->config->get('module_power_weight_class_id') ;
+		$length_class_id = (int)$this->config->get('module_power_length_class_id') ;
 		
 		
 		echo '<pre>';
@@ -141,6 +164,8 @@ class ModelExtensionModulePower extends Model {
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/manufacturer');
 		foreach($goods as $feed_product){
+				
+		 
 				
 			echo 'Product '.$feed_product->code  . PHP_EOL;		
 			if(empty($feed_product->article)){
@@ -161,7 +186,10 @@ class ModelExtensionModulePower extends Model {
 					$product['price'] =$feed_product->special_price;
 					
 				}
-				$product["model"] =  $feed_product->article;
+				$product["model"] =  $feed_product->model;
+				if(empty($product["model"])){
+					$product["model"] = $feed_product->article;
+				}
 				//qty
 				if($feed_product->quantity > 0 ){
 					$product['quantity'] = $feed_product->quantity;
@@ -179,6 +207,7 @@ class ModelExtensionModulePower extends Model {
 						quantity = '".$this->db->escape($product['quantity'])."',  
 						weight = '".$this->db->escape($product['weight'])."',  
 						model = '".$this->db->escape($product['model'])."',  
+						status = '1',  
 						stock_status_id = '".$this->db->escape($product['stock_status_id'])."'
 						WHERE  product_id = '".(int)$product_id."'");
 				/*
@@ -203,11 +232,41 @@ class ModelExtensionModulePower extends Model {
 				*	ATTRIBUTES
 				*/
 				echo 'attributes   '   . PHP_EOL;	
+	 
+				$height = 1;
+				$width = 1;
+				$length = 1;
+				
+				if(!empty($feed_product->height)){
+					$height = $feed_product->height;
+				}
+				if(!empty($feed_product->width)){
+					$width  = $feed_product->width;
+				}
+				if(!empty($feed_product->length)){
+					$length = $feed_product->length;
+				}
+		
+				
+				
+				$product["length"]=  $length;
+				$product["width"]= $width;
+				$product["height"]=  $height;
+				$query = $this->db->query("UPDATE " . DB_PREFIX . "product SET 
+							width = '".$this->db->escape( $width)."', 
+							height = '".$this->db->escape( $height)."',  
+							length = '".$this->db->escape($length )."',  
+							length_class_id = '". (int)$length_class_id."' 
+							WHERE  product_id = '".(int)$product_id."'");
+							
+							
 				$current_attributes = [];
 				if(!empty($feed_product->attributes)){
+				 
 					foreach($feed_product->attributes as $feed_attribute){
 						$_attr = [];
 						
+					 
 						$_attr['name'] = $feed_attribute->name;
 						$_attr['attribute_id'] = $this->check_attribute($feed_attribute->name, $attribute_group_id) ;
 						$_attr['product_id'] = $product_id;
@@ -557,9 +616,17 @@ class ModelExtensionModulePower extends Model {
 					$product['stock_status_id'] = $out_of_stock; //todo
 				}
 
-				$product["model"] =  $feed_product->article;
-				$product["sku"]=  $feed_product->code;
-				$product["upc"]= "";
+				//$product["model"] =  $feed_product->article;
+				$product["model"] =  $feed_product->model;
+				if(empty($product["model"])){
+					$product["model"] = $feed_product->article;
+				}
+				
+				
+				//$product["sku"]=  $feed_product->code;
+				$product["sku"]=  $feed_product->article;
+				
+				$product["upc"]= $feed_product->code;
 				$product["ean"]= "";
 				$product["jan"]= "";
 				$product["isbn"]=   "";
@@ -575,12 +642,12 @@ class ModelExtensionModulePower extends Model {
 		 
 				$product["shipping"]="1";
 				$product["date_available"]=   "2009-02-04";
-				$product["length"]=  "1.00000000";
-				$product["width"]= "2.00000000";
-				$product["height"]=  "3.00000000";
-				$product["length_class_id"]=  "1";
+				
 				$product["weight"]=  $feed_product->weight;
-				$product["weight_class_id"]=  "1";
+				$product["weight_class_id"]= $weight_class_id;
+				
+			
+				
 				$product["status"]= "1";
 				$product["sort_order"]= "0";
 				$product["manufacturer"]=  $feed_product->trademark;
@@ -605,11 +672,15 @@ class ModelExtensionModulePower extends Model {
 				$product["product_reward"]=  [];
 				$product["product_related"]=  [];
 				$product["product_attribute"]=  [];
-				$product["product_layout"][0]=  [0];
+				//$product["product_layout"][0]=  [0];
+				
+						
 				echo 'attributes   '   . PHP_EOL;	
 				if(!empty($feed_product->attributes)){
 					foreach($feed_product->attributes as $feed_attribute){
 						$_attr = [];
+					
+					 
 						
 						$_attr['name'] = $feed_attribute->name;
 						$_attr['attribute_id'] = $this->check_attribute($feed_attribute->name, $attribute_group_id) ;
@@ -617,6 +688,28 @@ class ModelExtensionModulePower extends Model {
 						$product["product_attribute"][] = $_attr;
 					} 	
 				}
+				
+				$height = 1;
+				$width = 1;
+				$length = 1;
+				
+				if(!empty($feed_product->height)){
+					$height = $feed_product->height;
+				}
+				if(!empty($feed_product->width)){
+					$width  = $feed_product->width;
+				}
+				if(!empty($feed_product->length)){
+					$length = $feed_product->length;
+				}
+		
+				
+				
+				$product["length"]=  $length;
+				$product["width"]= $width;
+				$product["height"]=  $height;
+				
+				$product["length_class_id"]=  $length_class_id;
 				echo 'categories   '   . PHP_EOL;	
 				foreach($feed_product->categories as $power_cat_id){
 					//$local_cat_id =  $this->get_local_category($power_cat_id, $categories);
@@ -880,7 +973,7 @@ class ModelExtensionModulePower extends Model {
 	}
 
 	public function deleteProductCategory($product_id, $local_cat_id){
-		$query = $this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_category` WHERE `product_id` = '".(int)$product_id."' AND `category_id` = '".(int)$local_cat_id."'");
+		$query = $this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_category` WHERE `product_id` = '".(int)$product_id."' AND `category_id` = '".(int)$local_cat_id."' AND power_id <> '0'");
 	
 	}
 	public function addProductCategory($product_id, $local_cat_id){
@@ -1044,7 +1137,10 @@ class ModelExtensionModulePower extends Model {
 		$error = curl_error($ch); 
 		curl_close ($ch);
 
- 
+		if(is_file($file_target)){
+			unlink($file_target);
+			
+		}
 		$file = fopen($file_target, "w+");
 		fputs($file, $data);
 		fclose($file);
