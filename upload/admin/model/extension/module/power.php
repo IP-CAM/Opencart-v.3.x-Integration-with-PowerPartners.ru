@@ -106,6 +106,12 @@ class ModelExtensionModulePower extends Model {
 
 	
 	public  function checkValid( ){
+		
+		if(!$this->check_column_exists('product', 'power_id')){
+			return true;
+			
+		}
+		
 		$last_run = $this->config->get('module_power_last_feed');
 		if(empty($last_run)){
 			$this->zeroQty();
