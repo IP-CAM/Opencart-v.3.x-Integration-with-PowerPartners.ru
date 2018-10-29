@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
-	<name>Powerpartners 3.0-3.0.2</name>
-	<version>0.92</version>
-	<author>Powerpartners</author>
+	<name>PowerPartners</name>
+	<version>0.93</version>
+	<author>PowerPartners</author>
 	<link>http://powerpartners.ru/</link>
 	<code>power001</code>
 	<file path="catalog/model/checkout/order.php">
