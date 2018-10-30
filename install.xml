@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
 	<name>PowerPartners</name>
-	<version>0.93</version>
+	<version>0.95</version>
 	<author>PowerPartners</author>
 	<link>http://powerpartners.ru/</link>
 	<code>power001</code>
@@ -67,7 +67,7 @@
 	
 	<file path="catalog/controller/common/header.php">
 		<operation>
-			<search><![CDATA[$this->response->setOutput($this->load->view('common/home', $data));]]></search>
+			<search><![CDATA[return $this->load->view('common/header', $data);]]></search>
 			<add position="before"><![CDATA[
 			
 			/* POWERPARTNERS CHANGES */

@@ -31,25 +31,25 @@ class ModelExtensionModulePower extends Model {
 	}
 	
 	public  function checkValid( ){
-		
+
 		if(!$this->check_column_exists('product', 'power_id')){
 			return true;
 			
 		}
-		
+
 		$last_run = $this->config->get('module_power_last_feed');
 		if(empty($last_run)){
 			$this->zeroQty();
 			
 		}
-		
+
 		$delta =time()- strtotime($last_run);
-	 
+
 		if($delta > 60 * 60 * 48){
 			
 			$this->zeroQty();
 		}
-		
+
 		return true;
 	}
 	public  function zeroQty( ){
@@ -58,6 +58,15 @@ class ModelExtensionModulePower extends Model {
 		return true;
 	}
 	
+	public function check_column_exists($table, $column){
+		$result = $this->db->query("SHOW COLUMNS FROM `" . DB_PREFIX . $this->db->escape($table). "` WHERE  `field` =  '".$this->db->escape($column)."'");
+		if(!empty($result->row)){
+				return true;
+		}
+		return false;
+
+	}
+
 	public function getShipping($methods){
 		
 			$products = $this->cart->getProducts();
