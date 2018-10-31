@@ -979,8 +979,10 @@ class ModelExtensionModulePower extends Model {
 	}
 
 	public function deleteProductCategory($product_id, $local_cat_id){
-		$query = $this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_category` pc LEFT JOIN `" . DB_PREFIX . "category` c ON pc.`categorry_id` = c.`category_id`
-		WHERE pc.`product_id` = '".(int)$product_id."' AND c.`category_id` = '".(int)$local_cat_id."' AND `category_id` NOT IN (SELECT `category_id`  FROM `" . DB_PREFIX . "category` WHERE `power_id` <> '0')");
+		$query = $this->db->query("DELETE FROM `" . DB_PREFIX . "product_to_category`
+		WHERE `product_id` = '".(int)$product_id."'
+		AND `category_id` = '".(int)$local_cat_id."'
+		AND `category_id` NOT IN (SELECT `category_id`  FROM `" . DB_PREFIX . "category` WHERE `power_id` = '0')");
 	}
 	public function addProductCategory($product_id, $local_cat_id){
 		 
