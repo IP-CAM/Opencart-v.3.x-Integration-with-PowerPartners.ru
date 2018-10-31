@@ -215,7 +215,7 @@ class ModelExtensionModulePower extends Model {
 			file_put_contents(DIR_LOGS.'power.log', PHP_EOL , FILE_APPEND);
 		}
 	 
-		
+		return true;
 	}
 		
 	private function curlFunction($url,  $data, $post , $token) {

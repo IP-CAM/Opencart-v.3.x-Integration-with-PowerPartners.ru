@@ -10,7 +10,7 @@ class ControllerExtensionPaymentPower extends Controller {
 		if ($this->session->data['payment_method']['code'] == 'power') {
 			$this->load->model('checkout/order');
 
-			$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('module_power_order_status_id'));
+			$this->model_checkout_order->addOrderHistory($this->session->data['order_id'], $this->config->get('module_power_status_oc')[10] );
 			$this->load->model('extension/module/power');
 			$this->model_extension_module_power->sendOrder($this->session->data['order_id']);
 			$json['redirect'] = $this->url->link('checkout/success');
