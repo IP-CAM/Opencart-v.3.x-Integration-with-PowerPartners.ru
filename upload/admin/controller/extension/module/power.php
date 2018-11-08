@@ -337,6 +337,7 @@ class ControllerExtensionModulePower extends Controller {
 	 
 		$setting_goods = $this->config->get('module_power_goods');
  
+ 
 		$import_goods = $this->model_extension_module_power->import_goods($goods );
  
 		

@@ -29,6 +29,9 @@ class ModelExtensionModulePower extends Model {
 		if(!$this->check_column_exists('product', 'certificate')){
 			$this->db->query("ALTER TABLE `" . DB_PREFIX . "product` ADD `certificate` VARCHAR(255) DEFAULT 0;");
 		}
+		if(!$this->check_column_exists('product', 'timeout')){
+			$this->db->query("ALTER TABLE `" . DB_PREFIX . "product` ADD `timeout` INT(1) DEFAULT 0;");
+		}
 		if(!$this->check_column_exists('order', 'power_id')){
 			 $this->db->query("ALTER TABLE `" . DB_PREFIX . "order` ADD `power_id` VARCHAR(255) DEFAULT 0;");
 		}
@@ -72,6 +75,9 @@ class ModelExtensionModulePower extends Model {
 		}
 		if($this->check_column_exists('product', 'certificate')){
 				 $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` DROP  `certificate` ");
+		}
+		if($this->check_column_exists('product', 'timeout')){
+				 $this->db->query("ALTER TABLE `" . DB_PREFIX . "product` DROP  `timeout` ");
 		}
 		if($this->check_column_exists('order', 'power_id')){
 				 $this->db->query("ALTER TABLE `" . DB_PREFIX . "order` DROP  `power_id` ");
@@ -128,10 +134,17 @@ class ModelExtensionModulePower extends Model {
 		return true;
 	}
 	public  function zeroQty( ){
-		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = 0,  `status` = 0 WHERE `power_id`  <> '0'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = 0,  `timeout` = 1 ,  `status` = 0  WHERE `power_id`  <> '0'");
 		
 		return true;
 	}
+	
+	public  function enableTimeout( ){
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET  `timeout` = 0 ,  `status` = 1  WHERE `timeout` = 0");
+		
+		return true;
+	}
+	
 	public function request($token, $method, $data = []) {
 		$url = $this->url . $this->api . $method ;
 		
@@ -169,6 +182,9 @@ class ModelExtensionModulePower extends Model {
 		
 		$this->load->model('catalog/category');
 		$this->load->model('catalog/manufacturer');
+		
+		
+		$this->enableTimeout();
 		foreach($goods as $feed_product){
 				
 		 
@@ -213,7 +229,7 @@ class ModelExtensionModulePower extends Model {
 						quantity = '".$this->db->escape($product['quantity'])."',  
 						weight = '".$this->db->escape($product['weight'])."',  
 						model = '".$this->db->escape($product['model'])."',  
-						status = '1',  
+						 
 						stock_status_id = '".$this->db->escape($product['stock_status_id'])."'
 						WHERE  product_id = '".(int)$product_id."'");
 				/*
