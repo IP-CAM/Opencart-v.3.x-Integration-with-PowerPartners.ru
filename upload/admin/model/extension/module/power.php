@@ -140,7 +140,7 @@ class ModelExtensionModulePower extends Model {
 	}
 	
 	public  function enableTimeout( ){
-		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET  `timeout` = 0 ,  `status` = 1  WHERE `timeout` = 0");
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET  `timeout` = 0 ,  `status` = 1  WHERE `timeout` = 1");
 		
 		return true;
 	}
