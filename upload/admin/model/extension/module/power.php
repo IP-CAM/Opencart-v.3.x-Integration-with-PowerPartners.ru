@@ -134,7 +134,7 @@ class ModelExtensionModulePower extends Model {
 		return true;
 	}
 	public  function zeroQty( ){
-		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = 0,  `timeout` = 1 ,  `status` = 0  WHERE `power_id`  <> '0'");
+		$this->db->query("UPDATE `" . DB_PREFIX . "product` SET `quantity` = 0,  `timeout` = 1 ,  `status` = 0  WHERE `power_id`  <> '0' AND  `status` <> '0'  ");
 		
 		return true;
 	}
