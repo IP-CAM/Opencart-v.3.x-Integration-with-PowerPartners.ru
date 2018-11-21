@@ -38,21 +38,24 @@
 				<a href="#tab_sale" data-toggle="tab">Настройки</a>
 			</li>
 			<li>
+				<a href="#tab_status" data-toggle="tab">Статусы</a>
+			</li>
+			<li>
+				<a href="#tab_units" data-toggle="tab">Единицы измерения</a>
+			</li>
+			<li>
 				<a href="#tab_about" data-toggle="tab">О модуле</a>
 			</li>
 			 
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab_sale">
-			
-				
-				
+
 				<br>
-				<h3 class="panel-title">Партнерские данные</h3>
-			 
-				
+				<h3 class="panel-title">Синхронизация с PowerPartners.ru</h3>
+
 				<div class="form-group">
-					<label class="col-sm-2 control-label" for="input-login">Токен</label>
+					<label class="col-sm-2 control-label" for="input-login">API Key</label>
 					<div class="col-sm-10">
 					  <input type="text" name="module_power_token" value="{{ module_power_token }}" placeholder="Ваш токен" id="input-token" class="form-control" />
 					  {% if error_token %}
@@ -60,45 +63,53 @@
 					  {% endif %}
 					</div>
 				</div>
-					 
-				<br>
-				<br>
-				<h3 class="panel-title">Статусы заказа</h3> 
-				 
-				{% for power_status_key,power_status_value in module_power_status_power %} 
+
 				<div class="form-group">
-					<label class="col-sm-2 control-label" for="input-login">При статусе заказе <br>'{{ power_status_value }}'<br> установить статус заказа в магазине:</label>
+					<label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
 					<div class="col-sm-10">
-						<select name="module_power_status_oc[{{ power_status_key }}]" id="input-module_power_order_status_id" class="form-control">
- 
-									{% for key2,order_status in order_statuses %} 
-										 <option  
-										{% if module_power_status_oc[power_status_key ] is defined %}
-											{% if module_power_status_oc[power_status_key] == order_status.order_status_id %}
-												 selected="selected" 
-											{% endif %}
-										{% endif %}
-										value="{{ order_status.order_status_id }}">{{ order_status.name }}</option> 
-									{% endfor %}
-						  </select>
-				
+					  <select name="module_power_status" id="input-status" class="form-control">
+					    {% if module_power_status  == 1 %}
+						<option value="1" selected="selected">{{ text_enabled }}</option>
+						<option value="0">{{ text_disabled }}</option>
+						{% else %}
+						<option value="1">{{ text_enabled }}</option>
+						<option value="0" selected="selected">{{ text_disabled }}</option>
+						{% endif %}
+					  </select>
 					</div>
 				</div>
-				{% endfor %}
- 
-				 
+
 				<br>
+				<br>
+				<h3 class="panel-title">Каталог товаров</h3>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-inn">Последняя загрузка</label>
+					<div class="col-sm-10">
+					  <input type="text"   disabled="disabled" value="{{ module_power_last_feed }}" placeholder="данные не загружались"  class="form-control" />
+					  <input type="hidden" name="module_power_last_feed"   value="{{ module_power_last_feed }}"  />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-inn">Обновить каталог</label>
+					<div class="col-sm-10">
+					  <a id="run_manual" class="btn btn-info" href="{{ update_feed_url }}" target="blank">Запустить вручную</a>
+					</div>
+				</div>
+
+			</div><!-- tab-pane -->
+
+			<div class="tab-pane" id="tab_status">
 				<br>
 				<h3 class="panel-title">Товарные статусы</h3>
-			 
+
 				 <div class="form-group">
 					<label class="col-sm-2 control-label" for="input-login">Статус товара в наличии</label>
 					<div class="col-sm-10">
 						<select name="module_power_in_stock" id="input-module_power_in_stock" class="form-control">
-						 
-							 
-								{% for key2,status in stock_statuses %} 
-									 <option  
+								{% for key2,status in stock_statuses %}
+									 <option 
 									{% if module_power_in_stock  is defined %}
 										{% if module_power_in_stock  == status.stock_status_id %}
 											 selected="selected" 
@@ -107,17 +118,15 @@
 									value="{{ status.stock_status_id }}">{{ status.name }}</option> 
 								{% endfor %}
 						  </select>
-				
+
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label" for="input-login">Статус товара не в наличии</label>
 					<div class="col-sm-10">
 						<select name="module_power_out_of_stock" id="input-module_power_out_of_stock" class="form-control">
-						 
-							 
 								{% for key2,status in stock_statuses %} 
-									 <option  
+									 <option 
 									{% if module_power_out_of_stock  is defined %}
 										{% if module_power_out_of_stock  == status.stock_status_id %}
 											 selected="selected" 
@@ -126,10 +135,38 @@
 									value="{{ status.stock_status_id }}">{{ status.name }}</option> 
 								{% endfor %}
 						  </select>
-				
+
 					</div>
 				</div>
-				 
+
+				<br>
+				<br>
+				<h3 class="panel-title">Статусы заказа</h3>
+
+				{% for power_status_key,power_status_value in module_power_status_power %} 
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="input-login">При статусе заказе <br>'{{ power_status_value }}'<br> установить статус заказа в магазине:</label>
+					<div class="col-sm-10">
+						<select name="module_power_status_oc[{{ power_status_key }}]" id="input-module_power_order_status_id" class="form-control">
+
+									{% for key2,order_status in order_statuses %}
+										 <option 
+										{% if module_power_status_oc[power_status_key ] is defined %}
+											{% if module_power_status_oc[power_status_key] == order_status.order_status_id %}
+												 selected="selected" 
+											{% endif %}
+										{% endif %}
+										value="{{ order_status.order_status_id }}">{{ order_status.name }}</option> 
+									{% endfor %}
+						  </select>
+
+					</div>
+				</div>
+				{% endfor %}
+
+			</div><!-- tab-pane -->
+
+			<div class="tab-pane" id="tab_units">
 			 <br>
 				<br>
 				<h3 class="panel-title">Единицы измерения</h3>
@@ -157,71 +194,23 @@
 					<label class="col-sm-2 control-label" for="input-login">Килограмм</label>
 					<div class="col-sm-10">
 						<select name="module_power_weight_class_id" id="input-module_power_weight_class_id" class="form-control">
-						 
-							 
-								{% for key2,class in weight_classes %} 
-									 <option  
+								{% for key2,class in weight_classes %}
+									 <option 
 									{% if module_power_weight_class_id  is defined %}
 										{% if module_power_weight_class_id  == class.weight_class_id %}
 											 selected="selected" 
 										{% endif %}
 									{% endif %}
-									value="{{ class.weight_class_id }}">{{ class.title }}</option> 
+									value="{{ class.weight_class_id }}">{{ class.title }}</option>
 								{% endfor %}
 						  </select>
-				
 					</div>
 				</div>
-				<br>
-				<br>
-				<h3 class="panel-title">Каталог</h3>
-			 
-				
-				<div class="form-group">
-					<label class="col-sm-2 control-label" for="input-inn">Последняя загрузка</label>
-					<div class="col-sm-10">
-					  <input type="text"   disabled="disabled" value="{{ module_power_last_feed }}" placeholder="данные не загружались"  class="form-control" />
-					  <input type="hidden" name="module_power_last_feed"   value="{{ module_power_last_feed }}"  />
-					 
-					</div>
-				</div>
-					
-				<div class="form-group">
-					<label class="col-sm-2 control-label" for="input-inn">Обновить каталог</label>
-					<div class="col-sm-10">
-					  <a id="run_manual" class="btn btn-info" href="{{ update_feed_url }}" target="blank">Запустить вручную</a>
-				 
-					 
-					</div>
-				</div>
-				 
-				<br>
-				 
-				<br>
-					<h3 class="panel-title">Модуль</h3>
-				  
-				  <div class="form-group">
-					<label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
-					<div class="col-sm-10">
-					  <select name="module_power_status" id="input-status" class="form-control">
-						 {% if module_power_status  == 1 %} 
-						<option value="1" selected="selected">{{ text_enabled }}</option>
-						<option value="0">{{ text_disabled }}</option>
-						{% else %}  
-						<option value="1">{{ text_enabled }}</option>
-						<option value="0" selected="selected">{{ text_disabled }}</option>
-						{% endif %}
-					  </select>
-					</div>
-				  </div>
-				
-			
 			</div><!-- tab-pane -->
 			
 			<div class="tab-pane" id="tab_about">
 				<div class="col-sm-offset-2 col-sm-8">
-					<h3>Партенерская программа  PowerPartners  для Opencart 3</h3>
-					
+					<h3>Партенерская программа PowerPartners для OpenCart v3.x</h3>
 					
 					<div class="row" style="margin-top:50px;">
 						<div class="col-sm-3">
@@ -247,9 +236,7 @@
 						<p><a href="mailto:mail@mad-studio.ru">mail@mad-studio.ru</a></p>
 						</div>
 					</div>
-					
-					 
-					
+
 				</div>
 			</div><!-- tab-pane -->
 			
