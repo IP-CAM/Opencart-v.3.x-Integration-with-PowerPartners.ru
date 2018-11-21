@@ -149,8 +149,8 @@ class ControllerExtensionModulePower extends Controller {
 		
 		 
 		$url = new Url(HTTP_CATALOG, $this->config->get('config_secure') ? HTTP_CATALOG : HTTPS_CATALOG);
-		//$data['cron'] =  DIR_APPLICATION . 'controller/extension/power_cron/update_orders.php';
-		//$data['cron2'] =  DIR_APPLICATION . 'controller/extension/power_cron/update_products.php';
+		$data['cron'] =  DIR_APPLICATION . 'controller/extension/power_cron/update_orders.php';
+		$data['cron2'] =  DIR_APPLICATION . 'controller/extension/power_cron/update_products.php';
 		$data['cron3'] =  DIR_APPLICATION . 'controller/extension/power_cron/update.php';
 		$data['breadcrumbs'] = array();
 

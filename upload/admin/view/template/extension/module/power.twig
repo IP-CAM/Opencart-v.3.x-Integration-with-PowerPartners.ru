@@ -26,10 +26,13 @@
       <div class="panel-body">
 		<div class="alert alert-info">
 			<h2>Настройте выполнение задач cron по расписанию на сервере:</h2>
-			<p>
-				<i class="fa fa-info-circle"></i> Обновление информации&emsp;<br><b>0 0 * * * php {{ cron3 }}</b>
+			<br>
+			<p style="font-family: monospace;">
+				0 0 * * * php {{ cron2 }} &gt;/dev/null 2>&gt;&amp;1
 			</p>
-			 
+			<p style="font-family: monospace;">
+				0 * * * * php {{ cron }} &gt;/dev/null 2&gt;&amp;1
+			</p>
 		</div>
 	  
         <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-latest" class="form-horizontal">
