@@ -1,30 +1,30 @@
-# Модуль интеграции OpenCart v3.x и PowerPartners.ru
+# Module for integration of OpenCart v3.x and PowerPartners.ru
 
-Модуль добавляет в ассортимент магазина, работающего на движке OpenCart v3.x товары партнерской программы [PowerPartners.ru](http://powerpartners.ru/), синхронизирует наличие, цены, описания, изображения товаров, сертификаты и технические паспорта. Осуществляет передачу принятых заказов в партнерскую программу, а так же синхронизирует статусы заказов.
+The module adds products of the affiliate program [PowerPartners.ru] (http://powerpartners.ru/) to the assortment of a store running on the OpenCart v3.x engine, synchronizes availability, prices, descriptions, product images, certificates and technical data sheets. Transfers accepted orders to the affiliate program, as well as synchronizes order statuses.
 
-## Системные требования
+## System requirements
 
-* Интернет-магазин на движке [OpenCart](https://www.opencart.com/) v3.x (протестировано на русской сборке [opencart-russia.ru](http://opencart-russia.ru/))
-* Возможность установки на хостинге/сервере [cron-заданий](https://ru.wikipedia.org/wiki/Cron)
+* Online store on the [OpenCart] engine (https://www.opencart.com/) v3.x (tested on the Russian assembly [opencart-russia.ru] (http://opencart-russia.ru/))
+* Ability to install on the hosting / server [cron jobs] (https://ru.wikipedia.org/wiki/Cron)
 
-## Установка модуля
+## Installing the module
 
-1. Скачать актуальный релиз модуля powerpartners.ocmod.zip из раздела "[Релизы](https://github.com/powerpartners/opencart-mod/releases/latest)"
-2. Зайти в админ-панель вашего OpenCart-магазина
-3. Перейти в раздел Модули/Расширения -> Установка расширений. Нажать кнопку "Загрузить" и выбрать скаченный ранее файл [powerpartners.ocmod.zip](https://github.com/powerpartners/opencart-mod/raw/master/powerpartners.ocmod.zip). Дождаться завершения процесса установки модуля.
-4. Перейти в раздел Модули/Расширения -> Модули/Расширения и активировать модуль PowerPartners
-5. Перейти в раздел Модули/Расширения -> Модификаторы и обновить кэш модификаторов нажатием кнопки "Обновить" в правом верхнем углу.
-6. Вернуться в раздел Модули/Расширения -> Модули/Расширения и войти в настройки модуля PowerPartners нажатем кнопки "Редактировать"
-   - Указать "API Key", который был сформирован для вашего домена (или получен по запросу в тех.поддержку)
-   - Выбрать для синхронизации статус "Включено"
-   - При необходимости, выбрать соотвествие статусов заказов OpenCart статусам PowerPartners
-   - При необходимости, выбрать соотвествия товарных статусов (есть/нет в наличии)
-   - Выбрать соответствия единицам измерения веса и размеров PowerPartners (кг и мм) единицам измерения OpenCart
-   - Скопировать строки настроек задач cron, расположенные в информационном блоке в верхней части окна настроек модуля
-7. Настроить на хостинге/сервере cron-задания, полученные в предыдущем пункте
+1. Download the current release of the powerpartners.ocmod.zip module from the "[Releases] (https://github.com/powerpartners/opencart-mod/releases/latest)" section
+2. Go to the admin panel of your OpenCart store
+3. Go to the section Modules / Extensions -> Install extensions. Click the "Download" button and select the previously downloaded file [powerpartners.ocmod.zip] (https://github.com/powerpartners/opencart-mod/raw/master/powerpartners.ocmod.zip). Wait until the installation process is complete.
+4. Go to the Modules / Extensions -> Modules / Extensions section and activate the PowerPartners module
+5. Go to the Modules / Extensions -> Modifiers section and update the modifier cache by clicking the "Refresh" button in the upper right corner.
+6. Return to the Modules / Extensions -> Modules / Extensions section and enter the settings of the PowerPartners module, press the "Edit" button
+   - Specify the "API Key" that was generated for your domain (or received upon request to technical support)
+   - Select "Enabled" status for synchronization
+   - If necessary, select the correspondence of the statuses of OpenCart orders to the statuses of PowerPartners
+   - If necessary, select the correspondence of product statuses (available / not available)
+   - Select the correspondence between PowerPartners weight and size units (kg and mm) and OpenCart units
+   - Copy the cron task settings lines located in the information block at the top of the module settings window
+7. Configure on the hosting / server cron jobs obtained in the previous paragraph
 
-### cron-задания
+### cron jobs
 
-cron-задания это команды, выполняемые с заданной периодичностью. Именно cron-задания осуществляют непосредственно синхронизацию данных магазина и партнерской программы и его без них работа модуля невозможна.
+cron jobs are commands that are executed at a specified frequency. It is cron jobs that directly synchronize the data of the store and the affiliate program, and without them, the module cannot work.
 
-Настройка cron-заданий производится на каждом хостинге по своему, общих рекомендаций не существует, поэтому, в случае затруднений, рекомендуется обратиться в техническую поддержку хостинга с просьбой помочь настроить cron-задания.
+Setting up cron jobs is done on each hosting in its own way, there are no general recommendations, therefore, in case of difficulties, it is recommended to contact the hosting technical support with a request to help set up cron jobs. 
