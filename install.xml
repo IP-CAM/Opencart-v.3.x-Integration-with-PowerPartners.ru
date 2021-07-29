@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
 	<name>PowerPartners</name>
-	<version>0.98</version>
+	<version>0.99</version>
 	<author>PowerPartners.ru</author>
-	<link>http://powerpartners.ru/</link>
+	<link>https://powerpartners.ru/</link>
 	<code>power001</code>
 	<file path="catalog/model/checkout/order.php">
 		<operation>
